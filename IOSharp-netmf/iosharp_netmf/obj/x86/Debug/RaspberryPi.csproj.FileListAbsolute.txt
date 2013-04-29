@@ -1,0 +1,9 @@
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\NETMF_RaspberryPi\RaspberryPi\bin\Debug\RaspberryPi.exe
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\NETMF_RaspberryPi\RaspberryPi\bin\Debug\RaspberryPi.pdb
+Z:\tfc\RaspberryPi.exe
+Z:\tfc\RaspberryPi.pdb
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\NETMF_RaspberryPi\RaspberryPi\obj\x86\Debug\RaspberryPi.exe
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\NETMF_RaspberryPi\RaspberryPi\obj\x86\Debug\RaspberryPi.pdb
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\NETMF_RaspberryPi\RaspberryPi\obj\x86\Debug\RaspberryPi.csprojResolveAssemblyReference.cache
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\RaspberryPi.exe
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\RaspberryPi.pdb

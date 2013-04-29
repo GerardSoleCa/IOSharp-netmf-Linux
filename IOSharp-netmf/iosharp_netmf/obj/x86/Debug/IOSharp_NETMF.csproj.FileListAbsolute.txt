@@ -1,0 +1,1 @@
+D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\IOSharp_NETMF.csprojResolveAssemblyReference.cache
