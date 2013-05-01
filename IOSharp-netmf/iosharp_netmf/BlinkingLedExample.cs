@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Linux.SPOT.Hardware
 {
-    class Program
+    class BlinkingLedExample
     {
         static void Main(string[] args)
         {

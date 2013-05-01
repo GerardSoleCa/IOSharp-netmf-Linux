@@ -60,7 +60,6 @@ namespace Linux.SPOT.Hardware
                 {
                     throw new ObjectDisposedException("");
                 }
-
                 NativeEventHandler callbacksOld = m_callbacks;
                 NativeEventHandler callbacksNew = (NativeEventHandler)Delegate.Combine(callbacksOld, value);
 
@@ -187,8 +186,11 @@ namespace Linux.SPOT.Hardware
 
         protected override void Dispose(bool disposing)
         {
-            Console.WriteLine("Disposing({0})", this.Id);
-            GPIOManager.Instance.Unexport(this.Id);
+            if (disposing)
+            {
+                Console.WriteLine("Disposing({0})", this.Id);
+                GPIOManager.Instance.Unexport(this.Id);
+            }
         }
 
         public bool Read()
@@ -215,7 +217,6 @@ namespace Linux.SPOT.Hardware
         protected InputPort(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interruptMode)
             : base(portId, glitchFilter, resistor, interruptMode)
         {
-            throw new NotImplementedException();
         }
 
         protected InputPort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)

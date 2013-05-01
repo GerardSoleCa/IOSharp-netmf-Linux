@@ -23,6 +23,7 @@ namespace Linux.SPOT.Manager
 
 
         private static Dictionary<Cpu.Pin, PortType> _activePins = new Dictionary<Cpu.Pin, PortType>();
+        private static List<Cpu.Pin> _reservedPins = new List<Cpu.Pin>();
 
         protected static String GPIO_PATH = "/sys/class/gpio/";
 
@@ -145,8 +146,9 @@ namespace Linux.SPOT.Manager
                         _activePins[pin] = PortType.TRISTATE;
                         throw new NotImplementedException();
                     case PortType.INTERRUPT:
+                        direction = "in";
                         _activePins[pin] = PortType.INTERRUPT;
-                        throw new NotImplementedException();
+                        break;
                 }
                 File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower().ToLower());
             }

@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Linux.SPOT.Hardware.Program</StartupObject>
+    <StartupObject>Linux.SPOT.Hardware.ButtonEventExample</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,11 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ButtonEnum.cs" />
+    <Compile Include="ButtonEventExample.cs" />
     <Compile Include="Cpu.cs" />
     <Compile Include="GPIOManager.cs" />
     <Compile Include="HardwareProvider.cs" />
     <Compile Include="IOPorts.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="BlinkingLedExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPI.cs" />
   </ItemGroup>
