@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Linux.SPOT.Hardware;
 using System.IO;
-using IOSharp_NETMF;
 
 namespace Linux.SPOT.Manager
 {
@@ -43,34 +42,33 @@ namespace Linux.SPOT.Manager
 
         public void Export(Cpu.Pin pin)
         {
-            if (!IsPinExported(pin))
+            if (!_activePins.ContainsKey(pin))
             {
+                Console.WriteLine("Exporting");
                 File.WriteAllText(GPIO_PATH + "export", ((int)pin).ToString());
                 _activePins.Add(pin, PortType.NONE);
             }
         }
 
-        public bool IsPinExported(Cpu.Pin pin)
-        {
-            if (_activePins.ContainsKey(pin))
-            {
-                return true;
-            }
-            else
-            {
-                List<String> l = Directory.GetDirectories(GPIO_PATH).ToList();
-                if (l.Contains(GPIO_PATH + pin.ToString().Split('_')[1]))
-                {
-
-                    return true;
-                }
-                else
-                {
-
-                    return false;
-                }
-            }
-        }
+        //public bool IsPinExported(Cpu.Pin pin)
+        //{
+        //    if (_activePins.ContainsKey(pin))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        List<String> l = Directory.GetDirectories(GPIO_PATH).ToList();
+        //        if (l.Contains(GPIO_PATH + pin.ToString().Split('_')[1]))
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
 
         public void Unexport(Cpu.Pin pin)
         {
@@ -99,7 +97,10 @@ namespace Linux.SPOT.Manager
                     throw new Exception();
                 }
             }
-            throw new Exception();
+            else
+            {
+                throw new Exception();
+            }
         }
 
         public void Write(Cpu.Pin pin, bool state)
@@ -109,7 +110,9 @@ namespace Linux.SPOT.Manager
                 if ((_activePins[pin] == PortType.OUTPUT))
                 {
                     int value = state == true ? 1 : 0;
+                    Console.WriteLine(value);
                     File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", (value).ToString().ToLower());
+                    Console.WriteLine(File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value"));
                 }
                 else if ((_activePins[pin] == PortType.TRISTATE))
                 {
@@ -120,13 +123,14 @@ namespace Linux.SPOT.Manager
                     throw new Exception();
                 }
             }
-            throw new Exception();
+            else { throw new Exception(); }
         }
 
         public void SetPortType(Cpu.Pin pin, PortType type)
         {
-            if (IsPinExported(pin))
+            if (_activePins.ContainsKey(pin))
             {
+                Console.WriteLine("Setting Port Type");
                 string direction = "";
                 switch (type)
                 {
@@ -150,7 +154,10 @@ namespace Linux.SPOT.Manager
                 }
                 File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower().ToLower());
             }
-            throw new Exception();
+            else
+            {
+                throw new Exception();
+            }
         }
 
     }

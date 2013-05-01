@@ -1,1 +1,5 @@
 D:\Gerard\Dropbox\TFC\codi\NETMF_Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\IOSharp_NETMF.csprojResolveAssemblyReference.cache
+Z:\tfc\IOSharp_NETMF.exe
+Z:\tfc\IOSharp_NETMF.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\IOSharp_NETMF.exe
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\IOSharp_NETMF.pdb

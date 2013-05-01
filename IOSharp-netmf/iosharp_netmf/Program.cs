@@ -11,8 +11,14 @@ namespace Linux.SPOT.Hardware
         static void Main(string[] args)
         {
             OutputPort o = new OutputPort(Cpu.Pin.GPIO_Pin17, true);
-            o.Write(true);
-            Console.ReadLine();
+            for (int i = 0; i < 5;i++ )
+            {
+                o.Write(true);
+                Thread.Sleep(500);
+                o.Write(false);
+                Thread.Sleep(500);
+            }
+            Console.WriteLine("Finishing");
         }
     }
 }
