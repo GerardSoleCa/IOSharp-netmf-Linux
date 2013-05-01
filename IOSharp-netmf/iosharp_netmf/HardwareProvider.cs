@@ -35,17 +35,17 @@ namespace Linux.SPOT.Hardware
 
         //--//
 
-        public virtual void GetSerialPins(string comPort, out Cpu.Pin rxPin, out Cpu.Pin txPin, out Cpu.Pin ctsPin, out Cpu.Pin rtsPin)
-        {
-            int comIdx = System.IO.Ports.SerialPortName.ConvertNameToIndex(comPort);
+        //public virtual void GetSerialPins(string comPort, out Cpu.Pin rxPin, out Cpu.Pin txPin, out Cpu.Pin ctsPin, out Cpu.Pin rtsPin)
+        //{
+        //    int comIdx = System.IO.Ports.SerialPortName.ConvertNameToIndex(comPort);
 
-            rxPin = Cpu.Pin.GPIO_NONE;
-            txPin = Cpu.Pin.GPIO_NONE;
-            ctsPin = Cpu.Pin.GPIO_NONE;
-            rtsPin = Cpu.Pin.GPIO_NONE;
+        //    rxPin = Cpu.Pin.GPIO_NONE;
+        //    txPin = Cpu.Pin.GPIO_NONE;
+        //    ctsPin = Cpu.Pin.GPIO_NONE;
+        //    rtsPin = Cpu.Pin.GPIO_NONE;
 
-            NativeGetSerialPins(comIdx, ref rxPin, ref txPin, ref ctsPin, ref rtsPin);
-        }
+        //    NativeGetSerialPins(comIdx, ref rxPin, ref txPin, ref ctsPin, ref rtsPin);
+        //}
 
         public virtual int GetSerialPortsCount()
         {
@@ -68,53 +68,54 @@ namespace Linux.SPOT.Hardware
             return NativeIsSupportedBaudRate(com, ref baudrateHz);
         }
 
-        public virtual void GetSupportBaudRates(int com, out System.IO.Ports.BaudRate[] StdBaudRate, out int size)
-        {
-            uint rBaudrate = 0;
-            uint[] baudrateSet = new uint[]  { 75,
-                                               150,
-                                               300,
-                                               600,
-                                               1200,
-                                               2400,
-                                               4800,
-                                               9600,
-                                               19200,
-                                               38400,
-                                               57600,
-                                               115200,
-                                               230400,
-                                              };
+        //public virtual void GetSupportBaudRates(int com, out System.IO.Ports.BaudRate[] StdBaudRate, out int size)
+        //{
+        //    uint rBaudrate = 0;
+        //    uint[] baudrateSet = new uint[]  { 75,
+        //                                       150,
+        //                                       300,
+        //                                       600,
+        //                                       1200,
+        //                                       2400,
+        //                                       4800,
+        //                                       9600,
+        //                                       19200,
+        //                                       38400,
+        //                                       57600,
+        //                                       115200,
+        //                                       230400,
+        //                                      };
 
-            StdBaudRate = new System.IO.Ports.BaudRate[13] {    System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                                System.IO.Ports.BaudRate.BaudrateNONE,
-                                                            };
+        //    StdBaudRate = new System.IO.Ports.BaudRate[13] {    System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                        System.IO.Ports.BaudRate.BaudrateNONE,
+        //                                                    };
 
-            size = 0;
-            for (int i = 0; i < baudrateSet.Length; i++)
-            {
-                rBaudrate = baudrateSet[i];
-                if (IsSupportedBaudRate(com, ref rBaudrate))
-                {
-                    StdBaudRate[size] = (System.IO.Ports.BaudRate)rBaudrate;
-                    size++;
-                }
-            }
+        //    size = 0;
+        //    for (int i = 0; i < baudrateSet.Length; i++)
+        //    {
+        //        rBaudrate = baudrateSet[i];
+        //        if (IsSupportedBaudRate(com, ref rBaudrate))
+        //        {
+        //            StdBaudRate[size] = (System.IO.Ports.BaudRate)rBaudrate;
+        //            size++;
+        //        }
+        //    }
 
-        }
+        //}
 
         //--//
+        
         public virtual void GetSpiPins(SPI.SPI_module spi_mod, out Cpu.Pin msk, out Cpu.Pin miso, out Cpu.Pin mosi)
         {
             msk = Cpu.Pin.GPIO_NONE;

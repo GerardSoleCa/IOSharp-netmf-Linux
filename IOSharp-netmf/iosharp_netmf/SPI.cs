@@ -183,7 +183,7 @@ namespace Linux.SPOT.Hardware
         {
             if (m_disposed)
             {
-                throw new ObjectDisposedException();
+                throw new ObjectDisposedException("");
             }
 
             if (
@@ -205,7 +205,7 @@ namespace Linux.SPOT.Hardware
         {
             if (m_disposed)
             {
-                throw new ObjectDisposedException();
+                throw new ObjectDisposedException("");
             }
 
             if (writeBuffer == null) 
@@ -242,7 +242,7 @@ namespace Linux.SPOT.Hardware
         {
             if (m_disposed)
             {
-                throw new ObjectDisposedException();
+                throw new ObjectDisposedException("");
             }
 
             if (
@@ -264,7 +264,7 @@ namespace Linux.SPOT.Hardware
         {
             if (m_disposed)
             {
-                throw new ObjectDisposedException();
+                throw new ObjectDisposedException("");
             }
 
             if (writeBuffer == null) 
