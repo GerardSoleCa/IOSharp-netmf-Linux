@@ -44,7 +44,6 @@ namespace Linux.SPOT.Manager
         {
             if (!_activePins.ContainsKey(pin))
             {
-                Console.WriteLine("Exporting");
                 File.WriteAllText(GPIO_PATH + "export", ((int)pin).ToString());
                 _activePins.Add(pin, PortType.NONE);
             }
@@ -83,19 +82,19 @@ namespace Linux.SPOT.Manager
         {
             if (_activePins.ContainsKey(pin))
             {
-                if ((_activePins[pin] == PortType.INPUT))
-                {
-                    String value = File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value");
-                    return value == "1" ? true : false;
-                }
-                else if ((_activePins[pin] == PortType.INTERRUPT) || (_activePins[pin] == PortType.TRISTATE))
-                {
-                    throw new NotImplementedException();
-                }
-                else
-                {
-                    throw new Exception();
-                }
+                //if ((_activePins[pin] == PortType.INPUT) || (_activePins[pin] == PortType.OUTPUT))
+                //{
+                String value = File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value");
+                return value == "1" ? true : false;
+                //}
+                //else if ((_activePins[pin] == PortType.INTERRUPT) || (_activePins[pin] == PortType.TRISTATE))
+                //{
+                //    throw new NotImplementedException();
+                //}
+                //else
+                //{
+                //    throw new Exception();
+                //}
             }
             else
             {
@@ -110,9 +109,7 @@ namespace Linux.SPOT.Manager
                 if ((_activePins[pin] == PortType.OUTPUT))
                 {
                     int value = state == true ? 1 : 0;
-                    Console.WriteLine(value);
                     File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", (value).ToString().ToLower());
-                    Console.WriteLine(File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value"));
                 }
                 else if ((_activePins[pin] == PortType.TRISTATE))
                 {
@@ -130,7 +127,6 @@ namespace Linux.SPOT.Manager
         {
             if (_activePins.ContainsKey(pin))
             {
-                Console.WriteLine("Setting Port Type");
                 string direction = "";
                 switch (type)
                 {

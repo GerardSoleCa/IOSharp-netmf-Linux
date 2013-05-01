@@ -169,14 +169,19 @@ namespace Linux.SPOT.Hardware
 
         protected Port(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interruptMode)
         {
-            throw new NotImplementedException();
-        }
-
-        protected Port(Cpu.Pin portId, bool initialState) {
+            this.Id = portId;
             GPIOManager.Instance.Export(portId);
         }
 
-        protected Port(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor) {
+        protected Port(Cpu.Pin portId, bool initialState)
+        {
+            this.Id = portId;
+            GPIOManager.Instance.Export(portId);
+        }
+
+        protected Port(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
+        {
+            this.Id = portId;
             throw new NotImplementedException();
         }
 
@@ -188,7 +193,7 @@ namespace Linux.SPOT.Hardware
 
         public bool Read()
         {
-            Console.WriteLine("Reading");
+            Console.WriteLine("Reading({0})", this.Id);
             return GPIOManager.Instance.Read(this.Id);
         }
 
@@ -232,7 +237,6 @@ namespace Linux.SPOT.Hardware
         public OutputPort(Cpu.Pin portId, bool initialState)
             : base(portId, initialState)
         {
-            this.Id = portId;
             GPIOManager.Instance.SetPortType(portId, PortType.OUTPUT);
         }
 
@@ -242,8 +246,9 @@ namespace Linux.SPOT.Hardware
             throw new NotImplementedException();
         }
 
-        public void Write(bool state){
-            Console.WriteLine("Write");
+        public void Write(bool state)
+        {
+            Console.WriteLine("Write({0})", this.Id);
             GPIOManager.Instance.Write(this.Id, state);
         }
 
@@ -288,7 +293,7 @@ namespace Linux.SPOT.Hardware
 
         public override void EnableInterrupt() { }
 
-        public override void DisableInterrupt(){}
+        public override void DisableInterrupt() { }
 
     }
 }
