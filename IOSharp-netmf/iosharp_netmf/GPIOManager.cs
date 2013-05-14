@@ -190,7 +190,7 @@ namespace Linux.SPOT.Manager
             Thread t = new Thread(this.Listen);
             ThreadHelper th = new ThreadHelper();
             th.Pin = pin;
-            th.Callback = "olakase";
+            th.Callback = "callback(,,,)";
 
             t.Start(th);
         }
@@ -201,11 +201,14 @@ namespace Linux.SPOT.Manager
              while (true)
             {
                 long time = GPIOManager.start_polling((int)th.Pin);
-                DateTime t = new DateTime(time);
+                int t = 1368557574;
+                System.DateTime dt = new System.DateTime(1970, 1, 1).AddSeconds(t);
+                Console.WriteLine(dt);
+
                 Console.WriteLine("Detect: {0}", (int)th.Pin);
                 Console.WriteLine("Callback: {0}",th.Callback);
                 Console.WriteLine("Time: {0}", time);
-                Console.WriteLine("Date: {0}", t);
+                Console.WriteLine("Date: {0}", dt);
             }
         }
 
