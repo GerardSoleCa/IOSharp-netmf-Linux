@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Linux.SPOT.Hardware
 {
@@ -11,10 +12,12 @@ namespace Linux.SPOT.Hardware
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting test");
+
             // Specify the GPIO pin we want to use as an interrupt 
             // source, specify the edges the interrupt should trigger on 
             InterruptPort button = new InterruptPort(Cpu.Pin.GPIO_Pin17, true,
-                Port.ResistorMode.PullDown, Port.InterruptMode.InterruptEdgeLow);
+                Port.ResistorMode.PullDown, Port.InterruptMode.InterruptEdgeHigh);
 
             // Hook up an event handler (delegate) to the OnInterrupt event 
             button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Linux.SPOT.Hardware;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Linux.SPOT.Manager
 {
@@ -150,7 +152,7 @@ namespace Linux.SPOT.Manager
                         _activePins[pin] = PortType.INTERRUPT;
                         break;
                 }
-                File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower().ToLower());
+                File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower());
             }
             else
             {
@@ -158,5 +160,62 @@ namespace Linux.SPOT.Manager
             }
         }
 
+        public void SetEdge(Cpu.Pin pin, Port.InterruptMode interruptMode)
+        {
+            String interrupt = "none";
+            Console.WriteLine(interruptMode);
+            switch (interruptMode)
+            {
+                case Port.InterruptMode.InterruptNone:
+                    break;
+                case Port.InterruptMode.InterruptEdgeLow:
+                    interrupt = "falling";
+                    break;
+                case Port.InterruptMode.InterruptEdgeLevelLow:
+                    break;
+                case Port.InterruptMode.InterruptEdgeLevelHigh:
+                    break;
+                case Port.InterruptMode.InterruptEdgeHigh:
+                    interrupt = "rising";
+                    break;
+                case Port.InterruptMode.InterruptEdgeBoth:
+                    interrupt = "both";
+                    break;
+            }
+            File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/edge", interrupt.ToLower());
+        }
+
+        public void Listen_events(Cpu.Pin pin)
+        {
+            Thread t = new Thread(this.Listen);
+            ThreadHelper th = new ThreadHelper();
+            th.Pin = pin;
+            th.Callback = "olakase";
+
+            t.Start(th);
+        }
+
+        private void Listen(object obj)
+        {
+            ThreadHelper th = (ThreadHelper)obj;
+             while (true)
+            {
+                long time = GPIOManager.start_polling((int)th.Pin);
+                DateTime t = new DateTime(time);
+                Console.WriteLine("Detect: {0}", (int)th.Pin);
+                Console.WriteLine("Callback: {0}",th.Callback);
+                Console.WriteLine("Time: {0}", time);
+                Console.WriteLine("Date: {0}", t);
+            }
+        }
+
+        [DllImport("libgpio.so", CallingConvention = CallingConvention.StdCall)]
+        private static extern long start_polling(int gpio);
+
+        private class ThreadHelper
+        {
+            public Cpu.Pin Pin { get; set; }
+            public string Callback { get; set; }
+        }
     }
 }

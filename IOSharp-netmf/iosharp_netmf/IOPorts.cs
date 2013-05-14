@@ -217,6 +217,7 @@ namespace Linux.SPOT.Hardware
         protected InputPort(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interruptMode)
             : base(portId, glitchFilter, resistor, interruptMode)
         {
+            GPIOManager.Instance.SetPortType(portId, PortType.INPUT);
         }
 
         protected InputPort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
@@ -283,14 +284,32 @@ namespace Linux.SPOT.Hardware
         public InterruptPort(Cpu.Pin portId, bool glitchFilter, ResistorMode resistor, InterruptMode interrupt)
             : base(portId, glitchFilter, resistor, interrupt)
         {
-            m_threadSpawn = null;
-            m_callbacks = null;
+            //m_threadSpawn = null;
+            //m_callbacks = null;
             GPIOManager.Instance.SetPortType(portId, PortType.INTERRUPT);
+            GPIOManager.Instance.SetEdge(portId, interrupt);
         }
 
         public void ClearInterrupt() { }
 
         public InterruptMode Interrupt { get; set; }
+
+        public event NativeEventHandler OnInterrupt
+        {
+            [MethodImplAttribute(MethodImplOptions.Synchronized)]
+            add
+            {
+                //GPIOManager.start_polling(17, value);
+                GPIOManager.Instance.Listen_events(this.Id);
+            }
+
+            [MethodImplAttribute(MethodImplOptions.Synchronized)]
+            remove
+            {
+                Console.WriteLine("Adeu");
+            }
+        }
+
 
         public override void EnableInterrupt() { }
 
