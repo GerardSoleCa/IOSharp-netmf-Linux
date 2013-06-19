@@ -1,0 +1,7 @@
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\bin\Debug\Alteraid.NETMF.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\bin\Debug\Alteraid.NETMF.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\bin\Debug\Microsoft.SPORT.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\bin\Debug\Microsoft.SPORT.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\obj\Debug\Alteraid.IOSharp.NETMF.csprojResolveAssemblyReference.cache
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\obj\Debug\Alteraid.NETMF.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Alteraid.NETMF\obj\Debug\Alteraid.NETMF.pdb

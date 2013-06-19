@@ -1,0 +1,6 @@
+Z:\tfc\Microsoft.SPORT.dll
+Z:\tfc\Microsoft.SPORT.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\Microsoft.SPORT.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\iosharp_netmf\obj\x86\Debug\Microsoft.SPORT.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Microsoft.SPOT\obj\x86\Debug\Microsoft.SPORT.dll
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\Microsoft.SPOT\obj\x86\Debug\Microsoft.SPORT.pdb
