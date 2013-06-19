@@ -6,6 +6,7 @@ using Linux.SPOT.Hardware;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Globalization;
 
 namespace Linux.SPOT.Manager
 {
@@ -185,13 +186,12 @@ namespace Linux.SPOT.Manager
             File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/edge", interrupt.ToLower());
         }
 
-        public void Listen_events(Cpu.Pin pin)
+        public void Listen_events(Cpu.Pin pin, NativeEventHandler callback)
         {
             Thread t = new Thread(this.Listen);
             ThreadHelper th = new ThreadHelper();
             th.Pin = pin;
-            th.Callback = "callback(,,,)";
-
+            th.Callback = callback;
             t.Start(th);
         }
 
@@ -200,25 +200,28 @@ namespace Linux.SPOT.Manager
             ThreadHelper th = (ThreadHelper)obj;
              while (true)
             {
-                long time = GPIOManager.start_polling((int)th.Pin);
-                int t = 1368557574;
-                System.DateTime dt = new System.DateTime(1970, 1, 1).AddSeconds(t);
-                Console.WriteLine(dt);
+                callback_p cback = GPIOManager.start_polling((int)th.Pin);
 
-                Console.WriteLine("Detect: {0}", (int)th.Pin);
-                Console.WriteLine("Callback: {0}",th.Callback);
-                Console.WriteLine("Time: {0}", time);
-                Console.WriteLine("Date: {0}", dt);
+                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time*1000);
+                th.Callback((uint)cback.pin, (uint)0, dt);
             }
         }
 
-        [DllImport("libgpio.so", CallingConvention = CallingConvention.StdCall)]
-        private static extern long start_polling(int gpio);
+        [DllImport("libnetmf-linux.so", CallingConvention = CallingConvention.StdCall)]
+        private static extern callback_p start_polling(int gpio);
 
         private class ThreadHelper
         {
             public Cpu.Pin Pin { get; set; }
-            public string Callback { get; set; }
+            public NativeEventHandler Callback { get; set; }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct callback_p
+        {
+           public int pin;
+           public string state;
+           public long poll_time;
         }
     }
 }

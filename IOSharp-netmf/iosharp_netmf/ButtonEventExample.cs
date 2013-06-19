@@ -36,6 +36,9 @@ namespace Linux.SPOT.Hardware
         {
             // This method is called whenever an interrupt occurs
             Console.WriteLine("The button is pressed");
+            Console.WriteLine("Port: {0}", port);
+            Console.WriteLine("State: {0}", state);
+            Console.WriteLine("Time: {0}", time);
         }
     }
 }

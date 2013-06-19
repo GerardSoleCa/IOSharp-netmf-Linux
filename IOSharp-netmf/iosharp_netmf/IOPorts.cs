@@ -300,7 +300,7 @@ namespace Linux.SPOT.Hardware
             add
             {
                 //GPIOManager.start_polling(17, value);
-                GPIOManager.Instance.Listen_events(this.Id);
+                GPIOManager.Instance.Listen_events(this.Id, value);
             }
 
             [MethodImplAttribute(MethodImplOptions.Synchronized)]
