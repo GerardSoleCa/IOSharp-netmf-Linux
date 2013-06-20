@@ -1,6 +1,7 @@
 language: c
  
- branches:
+#whitelist
+branches:
   only:
     - master
 
