@@ -1,7 +1,14 @@
 language: c
  
 install:
-  - sudo apt-get install mono-devel mono-gmcs nunit-console
+  - sudo apt-get install mono-devel mono-gmcs nunit-console cmake
  
 script:
   - xbuild IOSharp-netmf/CI.proj
+  - mkdir IOSharp-c/build
+  - cd IOSharp-c/build
+  - cmake .
+  - make
+
+notifications:
+ email: true
