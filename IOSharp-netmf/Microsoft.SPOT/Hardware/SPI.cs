@@ -24,7 +24,7 @@ namespace Microsoft.SPOT.Hardware
             public readonly uint Clock_RateKHz;
             public readonly SPI_module SPI_mod;
             public readonly Cpu.Pin BusyPin;
-            public readonly bool    BusyPin_ActiveState;
+            public readonly bool BusyPin_ActiveState;
 
             public Configuration(
                                   Cpu.Pin ChipSelect_Port,
@@ -35,21 +35,20 @@ namespace Microsoft.SPOT.Hardware
                                   bool Clock_Edge,
                                   uint Clock_RateKHz,
                                   SPI_module SPI_mod
-                                ) : this( ChipSelect_Port,
-                                          ChipSelect_ActiveState,
-                                          ChipSelect_SetupTime,
-                                          ChipSelect_HoldTime,
-                                          Clock_IdleState,
-                                          Clock_Edge,
-                                          Clock_RateKHz,
-                                          SPI_mod,
-                                          Cpu.Pin.GPIO_NONE,
-                                          false)
-                                          
-                                
+                                )
+                : this(ChipSelect_Port,
+                        ChipSelect_ActiveState,
+                        ChipSelect_SetupTime,
+                        ChipSelect_HoldTime,
+                        Clock_IdleState,
+                        Clock_Edge,
+                        Clock_RateKHz,
+                        SPI_mod,
+                        Cpu.Pin.GPIO_NONE,
+                        false)
             {
             }
-            
+
             public Configuration(
                                   Cpu.Pin ChipSelect_Port,
                                   bool ChipSelect_ActiveState,
@@ -61,7 +60,7 @@ namespace Microsoft.SPOT.Hardware
                                   SPI_module SPI_mod,
                                   Cpu.Pin BusyPin,
                                   bool BusyPin_ActiveState
-                                  
+
                                 )
             {
                 this.ChipSelect_Port = ChipSelect_Port;
@@ -192,8 +191,8 @@ namespace Microsoft.SPOT.Hardware
                 // write buffer must be larger than the sum of the offset and the count for writing from it
                 (writeOffset + writeCount > writeBuffer.Length) ||
                 // read buffer must be larger than the offset and the count for writing from it
-                ((readBuffer != null) && (readOffset + readCount > readBuffer.Length)) 
-               ) 
+                ((readBuffer != null) && (readOffset + readCount > readBuffer.Length))
+               )
             {
                 throw new ArgumentException();
             }
@@ -208,13 +207,13 @@ namespace Microsoft.SPOT.Hardware
                 throw new ObjectDisposedException("");
             }
 
-            if (writeBuffer == null) 
+            if (writeBuffer == null)
             {
                 throw new ArgumentException();
             }
 
             int readBufLen = 0;
-            
+
             if (readBuffer != null)
             {
                 readBufLen = readBuffer.Length;
@@ -235,7 +234,7 @@ namespace Microsoft.SPOT.Hardware
 
         public void Write(ushort[] writeBuffer)
         {
-            WriteRead(writeBuffer, null, 0 );
+            WriteRead(writeBuffer, null, 0);
         }
 
         public void WriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset)
@@ -251,7 +250,7 @@ namespace Microsoft.SPOT.Hardware
                 // write buffer must be larger than the sum of the offset and the count for writing from it
                 (writeOffset + writeCount > writeBuffer.Length) ||
                 // read buffer must be larger than the offset and the count for writing from it
-                ((readBuffer != null) && (readOffset + readCount > readBuffer.Length)) 
+                ((readBuffer != null) && (readOffset + readCount > readBuffer.Length))
                )
             {
                 throw new ArgumentException();
@@ -267,12 +266,12 @@ namespace Microsoft.SPOT.Hardware
                 throw new ObjectDisposedException("");
             }
 
-            if (writeBuffer == null) 
+            if (writeBuffer == null)
             {
                 throw new ArgumentException();
             }
             int readBufLen = 0;
-            
+
             if (readBuffer != null)
             {
                 readBufLen = readBuffer.Length;
@@ -325,7 +324,7 @@ namespace Microsoft.SPOT.Hardware
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern private void InternalWriteRead(ushort[] writeBuffer, int writeOffset, int writeCount, ushort[] readBuffer, int readOffset, int readCount, int startReadOffset);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        extern private void InternalWriteRead(byte[] writeBuffer  , int writeOffset, int writeCount, byte[] readBuffer  , int readOffset, int readCount, int startReadOffset);
+        extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset);
     }
 }
 

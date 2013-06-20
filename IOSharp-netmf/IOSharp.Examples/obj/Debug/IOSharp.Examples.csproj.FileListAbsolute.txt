@@ -8,3 +8,5 @@ D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Exam
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\Microsoft.SPORT.pdb
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp_Examples.exe
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp_Examples.pdb
+Z:\tfc\builds\IOSharp_Examples.exe
+Z:\tfc\builds\IOSharp_Examples.pdb
