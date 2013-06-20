@@ -7,7 +7,7 @@ script:
   - xbuild IOSharp-netmf/CI.proj
   - mkdir IOSharp-c/build
   - cd IOSharp-c/build
-  - cmake .
+  - cmake ../
   - make
 
 notifications:
