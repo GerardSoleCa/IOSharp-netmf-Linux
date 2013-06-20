@@ -133,5 +133,3 @@ uint64_t start_polling(int pin){
   gpio_fd_close(gpio_fd);
 }
 
-
-}

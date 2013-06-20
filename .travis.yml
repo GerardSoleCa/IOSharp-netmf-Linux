@@ -1,5 +1,9 @@
 language: c
  
+ branches:
+  only:
+    - master
+
 install:
   - sudo apt-get install mono-devel mono-gmcs nunit-console cmake
  
