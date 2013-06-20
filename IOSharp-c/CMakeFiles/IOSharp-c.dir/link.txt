@@ -1,0 +1,1 @@
+/usr/bin/gcc  -fPIC    -shared -Wl,-soname,libIOSharp-c.so -o libIOSharp-c.so CMakeFiles/IOSharp-c.dir/IOSharp.c.o 
