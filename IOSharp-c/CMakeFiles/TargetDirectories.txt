@@ -1,1 +1,0 @@
-/home/pi/IOSharp-netmf-Linux/IOSharp-c/CMakeFiles/IOSharp-c.dir
