@@ -17,10 +17,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Z:\tfc\builds\</OutputPath>
+    <OutputPath>Z:\tfc\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,8 +46,11 @@
   <ItemGroup>
     <Compile Include="BlinkingLedExample.cs" />
     <Compile Include="ButtonEventExample.cs" />
+    <Compile Include="MFRC522_API\SPIApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPIExample.cs" />
+    <Compile Include="Utils\ExtensionAttribute.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IOSharp.NETMF.RaspberryPi\IOSharp.NETMF.RaspberryPi.csproj">

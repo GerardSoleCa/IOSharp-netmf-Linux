@@ -207,7 +207,7 @@ namespace Microsoft.SPOT.Manager
             }
         }
 
-        [DllImport("libnetmf-linux.so", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("libIOSharp-c.so", CallingConvention = CallingConvention.StdCall)]
         private static extern callback_p start_polling(int gpio);
 
         private class ThreadHelper

@@ -5,6 +5,7 @@ namespace IOSharp.NETMF.RaspberryPi.Hardware
     public static class Pins
     {
         public const Cpu.Pin GPIO_NONE = (Cpu.Pin) (- 1);
+        public const Cpu.Pin GPIO_PIN2 = (Cpu.Pin)2;
         public const Cpu.Pin GPIO_PIN_A0 = (Cpu.Pin)59;
         public const Cpu.Pin GPIO_PIN_A1 = (Cpu.Pin)60;
         public const Cpu.Pin GPIO_PIN_A2 = (Cpu.Pin)61;

@@ -2,6 +2,6 @@ D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETM
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\bin\Debug\IOSharp.NETMF.RaspberryPi.pdb
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\bin\Debug\Microsoft.SPORT.dll
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\bin\Debug\Microsoft.SPORT.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\obj\Debug\IOSharp.NETMF.RaspberryPi.csprojResolveAssemblyReference.cache
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\obj\Debug\IOSharp.NETMF.RaspberryPi.dll
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\obj\Debug\IOSharp.NETMF.RaspberryPi.pdb
-D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.NETMF.RaspberryPi\obj\Debug\IOSharp.NETMF.RaspberryPi.csprojResolveAssemblyReference.cache

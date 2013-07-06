@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using IOSharp.NETMF.RaspberryPi.Hardware;
-using Microsoft.SPOT.Hardware;
+using IOSharp.Utils;
+using System.Net;
 
 namespace IOSharp.Exmples
 {
-    class SPIExample
+    public class SPIExample
     {
-        private SPI spiDevice;
-        private OutputPort led;
-        private InputPort button;
-        private int bufferSize = 16;
-        private int sendBuffer = 25;
+        private MFRC522.SPIApi mfrc522 = new MFRC522.SPIApi();
+        private bool onUpdate = false;
+        private bool activated = false;
+        private Timer cardReader = null;
 
         public static void Main()
         {
@@ -20,174 +20,77 @@ namespace IOSharp.Exmples
 
         private void Run()
         {
-            ConfigureSPI();
-            ConfigureInOut();
-        }
-
-        private void ConfigureInOut()
-        {
-            led = new OutputPort(Pins.ONBOARD_LED, false);
-            button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeLow);
-
-            button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);
-
+            mfrc522.ConfigureSPI();
+            Console.WriteLine(StringUtils.ToHexString(mfrc522.ReadReg_MFRC522(mfrc522.VersionReg)));
+            ConfigureTimer(!activated);
             Thread.Sleep(-1);
         }
 
-        private void button_OnInterrupt(uint data1, uint data2, DateTime time)
+        private void ConfigureTimer(bool activate)
         {
-            led.Write(true);
-            ResetDevice();
-            //ReadTag();
-            TestSPI1();
-            led.Write(false);
-        }
-
-        private void ConfigureSPI()
-        {
-            SPI.Configuration xSPIConfig;
-
-            xSPIConfig = new SPI.Configuration(Pins.GPIO_PIN_D5,    //Chip Select pin
-                                                false,              //Chip Select Active State
-                                                50,                  //Chip Select Setup Time
-                                                0,                  //Chip Select Hold Time
-                                                false,              //Clock Idle State
-                                                true,               //Clock Edge
-                                                1000,               //Clock Rate (kHz)
-                                                SPI.SPI_module.SPI1);//SPI Module
-            spiDevice = new SPI(xSPIConfig);
-        }
-
-        private void ResetDevice()
-        {
-            byte reset = 0x0f;
-
-            byte[] data = new byte[1];
-            data[0] = FormCommand(reset);
-
-            byte[] ReadBuffer = new byte[sendBuffer];
-            byte[] WriteBuffer = new byte[data.Length + 1];
-
-            WriteBuffer[0] = ((byte)(0x7E & (0x01 << 1)));
-
-            for (int i = 0; i < data.Length; ++i)
+            if (activate)
             {
-                WriteBuffer[i + 1] = data[i];
+                Utils.StringUtils.PrintConsole("****Card reader started****");
+                onUpdate = false;
+                mfrc522.MFRC522Init();
+                cardReader = new Timer(StartMFRC522, this, 10, 500);
+                activated = true;
+
             }
-
-            spiDevice.WriteRead(WriteBuffer, ReadBuffer);
-        }
-
-        private void _ReadTag()
-        {
-            // Create read buffer
-            byte[] ReadBuffer = new byte[sendBuffer];
-
-            // Create and fill write buffer
-            byte[] WriteBuffer = new byte[sendBuffer];
-
-            // Fill the write buffer with 0xFF, is not always necessary
-            WriteBuffer[0] = 0x20;
-            for (int c = 0; c < sendBuffer; c++)
+            else
             {
-                ReadBuffer[c] = 0xff;
-
-                if (c > 0)
-                    WriteBuffer[c] = 0x20;
+                Utils.StringUtils.PrintConsole("****Card reader stoped****");
+                cardReader.Dispose();
+                mfrc522.MFRC522Stop();
+                activated = false;
             }
+        }
 
-            // Transfer data
-            spiDevice.WriteRead(WriteBuffer, ReadBuffer);
-
-            // Debug Read data
-            Console.WriteLine("Recieved " + sendBuffer + " bytes from SPI Slave");
-            //Debug.Print(new String(System.Text.Encoding.UTF8.GetChars(ReadBuffer)));
-
-            String s = "";
-
-            for (int c = 0; c < sendBuffer; c++)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void StartMFRC522(Object timerInput)
+        {
+            if (!onUpdate)
             {
-                //Debug.Print(c.ToString() + ": " + ReadBuffer[c].ToString());
-                s += ReadBuffer[c].ToString() + " ";
+                onUpdate = true;
+                String cardType = mfrc522.ReadTagTypeString(mfrc522.PICC_REQALL);
+                if (!cardType.Equals("*"))
+                {
+                    CardDetected(cardType, mfrc522.ReadSerialNumberString());
+                }
+                onUpdate = false;
             }
-
-            Console.WriteLine(s);
         }
 
-        private void ReadTag()
+        private void CardDetected(String cardType, String serialNumber)
         {
-            byte receive = 0x08;
+            /**Card type
+            *			 	0x4400 = Mifare_UltraLight
+            *				0x0400 = Mifare_One(S50)
+            *				0x0200 = Mifare_One(S70)
+            *				0x0800 = Mifare_Pro(X)
+            *				0x4403 = Mifare_DESFire
+            */
 
-            byte data = FormCommand(receive);
-
-            WriteReg(0x01, data);
-        }
-
-        private void TestSPI1()
-        {
-            byte randomID = 0x0A;
-
-            byte data = FormCommand(randomID);
-
-            ReadReg(0x01, data);
-        }
-
-        private byte FormCommand(byte cmd)
-        {
-            return (byte)(0x30 | (cmd & 0x0f));
-        }
-
-        private void WriteReg(byte addr, byte data)
-        {
-            byte[] ReadBuffer = new byte[2];
-            byte[] WriteBuffer = new byte[2];
-
-            WriteBuffer[0] = ((byte)(0x7E & (addr << 1)));
-
-            WriteBuffer[1] = data;
-            //for (int i = 0; i < data.Length; ++i)
-            //{
-            //    WriteBuffer[i + 1] = data[i];
-            //}
-
-            spiDevice.WriteRead(WriteBuffer, ReadBuffer);
-
-            Console.WriteLine("Received " + ReadBuffer.Length + " bytes from SPI Slave");
-            //Debug.Print(new String(System.Text.Encoding.UTF8.GetChars(ReadBuffer)));
-
-            String s = "";
-
-            for (int c = 0; c < 2; c++)
+            cardType = cardType.Trim();
+            switch (cardType)
             {
-                //Debug.Print(c.ToString() + ": " + ReadBuffer[c].ToString());
-                s += ReadBuffer[c].ToString() + " ";
+                case "44 00":
+                    cardType = "Mifare_UltraLight (" + cardType + ") ";
+                    break;
+                case "04 00":
+                    cardType = "Mifare_One(S50) (" + cardType + ") ";
+                    break;
+                case "02 00":
+                    cardType = "Mifare_One(S70) (" + cardType + ") ";
+                    break;
+                case "08 00":
+                    cardType = "Mifare_Pro(X) (" + cardType + ") ";
+                    break;
+                case "44 03":
+                    cardType = "Mifare_DESFire (" + cardType + ") ";
+                    break;
             }
-
-            Console.WriteLine(s);
-        }
-
-        private void ReadReg(byte addr, byte data)
-        {
-            byte[] ReadBuffer = new byte[2];
-            byte[] WriteBuffer = new byte[2];
-
-            WriteBuffer[0] = ((byte)(0x80 | (0x7E & (addr << 1))));
-            WriteBuffer[1] = 0;
-
-            spiDevice.WriteRead(WriteBuffer, ReadBuffer);
-
-            Console.WriteLine("Received " + ReadBuffer.Length + " bytes from SPI Slave");
-            //Debug.Print(new String(System.Text.Encoding.UTF8.GetChars(ReadBuffer)));
-
-            String s = "";
-
-            for (int c = 0; c < 2; c++)
-            {
-                //Debug.Print(c.ToString() + ": " + ReadBuffer[c].ToString());
-                s += ReadBuffer[c].ToString() + " ";
-            }
-
-            Console.WriteLine(s);
+            StringUtils.PrintConsole("Card detected: " + cardType + "- Serial: " + serialNumber);
         }
     }
 }

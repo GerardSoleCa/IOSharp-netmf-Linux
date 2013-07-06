@@ -133,3 +133,37 @@ uint64_t start_polling(int pin){
   gpio_fd_close(gpio_fd);
 }
 
+#define RX_LEN 32
+void transfer_spi(){
+  int fd;
+
+  fd = open("/dev/spidev0.1", O_RDWR);
+   if (fd < 0) {
+                perror("open");
+         }
+
+  struct spi_ioc_transfer xfer[2];
+
+  unsigned char buf[RX_LEN];
+
+  memset(xfer, 0, sizeof xfer);
+  memset(buf, 0, sizeof buf);
+
+  buf[0] = 0xaa;
+  xfer[0].tx_buf = (unsigned long) buf;
+  xfer[0].len = 1;
+
+  xfer[1].rx_buf = (unsigned long) buf;
+  xfer[1].len = 1;
+
+  ioctl(fd, SPI_IOC_MESSAGE(2),xfer);
+
+  printf("%l\n",xfer[1].rx_buf );
+}
+
+int main(void) {
+
+    puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+  transfer_spi();
+    return 0;
+}

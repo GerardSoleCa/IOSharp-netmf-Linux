@@ -1,12 +1,12 @@
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp_Examples\obj\Debug\IOSharp.Examples.csprojResolveAssemblyReference.cache
-D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp.Examples.csprojResolveAssemblyReference.cache
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\IOSharp_Examples.exe
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\IOSharp_Examples.pdb
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\IOSharp.NETMF.RaspberryPi.dll
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\Microsoft.SPORT.dll
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\IOSharp.NETMF.RaspberryPi.pdb
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\bin\Debug\Microsoft.SPORT.pdb
+Z:\tfc\IOSharp_Examples.exe
+Z:\tfc\IOSharp_Examples.pdb
+D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp.Examples.csprojResolveAssemblyReference.cache
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp_Examples.exe
 D:\Gerard\Dropbox\TFC\codi\GitHub\IOSharp-netmf-Linux\IOSharp-netmf\IOSharp.Examples\obj\Debug\IOSharp_Examples.pdb
-Z:\tfc\builds\IOSharp_Examples.exe
-Z:\tfc\builds\IOSharp_Examples.pdb

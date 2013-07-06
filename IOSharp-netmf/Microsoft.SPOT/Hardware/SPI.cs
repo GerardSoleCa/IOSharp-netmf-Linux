@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.SPOT.Hardware
 {
@@ -86,39 +87,39 @@ namespace Microsoft.SPOT.Hardware
 
         public SPI(Configuration config)
         {
-            HardwareProvider hwProvider = HardwareProvider.HwProvider;
+            //HardwareProvider hwProvider = HardwareProvider.HwProvider;
 
-            if (hwProvider != null)
-            {
-                Cpu.Pin msk;
-                Cpu.Pin miso;
-                Cpu.Pin mosi;
+            //if (hwProvider != null)
+            //{
+            //    Cpu.Pin msk;
+            //    Cpu.Pin miso;
+            //    Cpu.Pin mosi;
 
-                hwProvider.GetSpiPins(config.SPI_mod, out msk, out miso, out mosi);
+            //    hwProvider.GetSpiPins(config.SPI_mod, out msk, out miso, out mosi);
 
-                if (msk != Cpu.Pin.GPIO_NONE)
-                {
-                    Port.ReservePin(msk, true);
-                }
+            //    if (msk != Cpu.Pin.GPIO_NONE)
+            //    {
+            //        Port.ReservePin(msk, true);
+            //    }
 
-                if (miso != Cpu.Pin.GPIO_NONE)
-                {
-                    Port.ReservePin(miso, true);
-                }
+            //    if (miso != Cpu.Pin.GPIO_NONE)
+            //    {
+            //        Port.ReservePin(miso, true);
+            //    }
 
-                if (mosi != Cpu.Pin.GPIO_NONE)
-                {
-                    Port.ReservePin(mosi, true);
-                }
-            }
+            //    if (mosi != Cpu.Pin.GPIO_NONE)
+            //    {
+            //        Port.ReservePin(mosi, true);
+            //    }
+            //}
 
-            if (config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
-            {
-                m_cs = new OutputPort(config.ChipSelect_Port, !config.ChipSelect_ActiveState);
-            }
+            //if (config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
+            //{
+            //    m_cs = new OutputPort(config.ChipSelect_Port, !config.ChipSelect_ActiveState);
+            //}
 
-            m_config = config;
-            m_disposed = false;
+            //m_config = config;
+            //m_disposed = false;
         }
 
         ~SPI()
@@ -129,46 +130,46 @@ namespace Microsoft.SPOT.Hardware
         [MethodImplAttribute(MethodImplOptions.Synchronized)]
         private void Dispose(bool fDisposing)
         {
-            if (!m_disposed)
-            {
-                try
-                {
-                    HardwareProvider hwProvider = HardwareProvider.HwProvider;
+            //if (!m_disposed)
+            //{
+            //    try
+            //    {
+            //        HardwareProvider hwProvider = HardwareProvider.HwProvider;
 
-                    if (hwProvider != null)
-                    {
-                        Cpu.Pin msk;
-                        Cpu.Pin miso;
-                        Cpu.Pin mosi;
+            //        if (hwProvider != null)
+            //        {
+            //            Cpu.Pin msk;
+            //            Cpu.Pin miso;
+            //            Cpu.Pin mosi;
 
-                        hwProvider.GetSpiPins(m_config.SPI_mod, out msk, out miso, out mosi);
+            //            hwProvider.GetSpiPins(m_config.SPI_mod, out msk, out miso, out mosi);
 
-                        if (msk != Cpu.Pin.GPIO_NONE)
-                        {
-                            Port.ReservePin(msk, false);
-                        }
+            //            if (msk != Cpu.Pin.GPIO_NONE)
+            //            {
+            //                Port.ReservePin(msk, false);
+            //            }
 
-                        if (miso != Cpu.Pin.GPIO_NONE)
-                        {
-                            Port.ReservePin(miso, false);
-                        }
+            //            if (miso != Cpu.Pin.GPIO_NONE)
+            //            {
+            //                Port.ReservePin(miso, false);
+            //            }
 
-                        if (mosi != Cpu.Pin.GPIO_NONE)
-                        {
-                            Port.ReservePin(mosi, false);
-                        }
-                    }
+            //            if (mosi != Cpu.Pin.GPIO_NONE)
+            //            {
+            //                Port.ReservePin(mosi, false);
+            //            }
+            //        }
 
-                    if (m_config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
-                    {
-                        m_cs.Dispose();
-                    }
-                }
-                finally
-                {
-                    m_disposed = true;
-                }
-            }
+            //        if (m_config.ChipSelect_Port != Cpu.Pin.GPIO_NONE)
+            //        {
+            //            m_cs.Dispose();
+            //        }
+            //    }
+            //    finally
+            //    {
+            //        m_disposed = true;
+            //    }
+            //}
         }
 
         public void Dispose()
@@ -256,7 +257,7 @@ namespace Microsoft.SPOT.Hardware
                 throw new ArgumentException();
             }
 
-            InternalWriteRead(writeBuffer, writeOffset, writeCount, readBuffer, readOffset, readCount, startReadOffset);
+            InternalWriteRead(writeBuffer, writeOffset, writeCount, readBuffer, readOffset, readCount, startReadOffset, 1000000);
         }
 
         public void WriteRead(byte[] writeBuffer, byte[] readBuffer, int startReadOffset)
@@ -272,12 +273,14 @@ namespace Microsoft.SPOT.Hardware
             }
             int readBufLen = 0;
 
-            if (readBuffer != null)
+            if (readBuffer == null)
             {
-                readBufLen = readBuffer.Length;
+                readBuffer = new Byte[writeBuffer.Length];
             }
+                     readBufLen = readBuffer.Length;
+       
 
-            InternalWriteRead(writeBuffer, 0, writeBuffer.Length, readBuffer, 0, readBufLen, startReadOffset);
+            InternalWriteRead(writeBuffer, 0, writeBuffer.Length, readBuffer, 0, readBufLen, startReadOffset, 1000000);
         }
 
         public void WriteRead(byte[] writeBuffer, byte[] readBuffer)
@@ -323,8 +326,11 @@ namespace Microsoft.SPOT.Hardware
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern private void InternalWriteRead(ushort[] writeBuffer, int writeOffset, int writeCount, ushort[] readBuffer, int readOffset, int readCount, int startReadOffset);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset);
+        //[MethodImplAttribute(MethodImplOptions.InternalCall)]
+        //extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset);
+
+        [DllImport("libIOSharp-c.so", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        static extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset, uint speed);
     }
 }
 
