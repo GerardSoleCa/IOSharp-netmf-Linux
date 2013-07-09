@@ -64,9 +64,11 @@
   <ItemGroup>
     <Compile Include="Hardware\ButtonEnum.cs" />
     <Compile Include="Hardware\Cpu.cs" />
+    <Compile Include="Hardware\Ports.cs" />
     <Compile Include="Manager\GPIOManager.cs" />
     <Compile Include="Hardware\HardwareProvider.cs" />
     <Compile Include="Hardware\IOPorts.cs" />
+    <Compile Include="Native_UART\SerialPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hardware\SPI.cs" />
   </ItemGroup>

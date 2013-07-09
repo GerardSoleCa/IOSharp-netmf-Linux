@@ -5,7 +5,6 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <poll.h>
 
 /* SPI */
@@ -15,6 +14,17 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
+/*
+
+   ____ ____ ___ ___    _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
+  / ___|  _ |_ _/ _ \  |  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
+ | |  _| |_) | | | | | | |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
+ | |_| |  __/| | |_| | |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
+  \____|_|  |___\___/  |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/
+                                                                     
+
+*/
+
  /****************************************************************
  * Constants
  ****************************************************************/
@@ -23,13 +33,6 @@
 #define POLL_TIMEOUT (-1) /* 3 seconds */
 #define MAX_BUF 64
 
-/* SPI */
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-static const char *device = "/dev/spidev0.1";
-static uint8_t mode = 3;
-static uint8_t bits = 8;
-static uint32_t speed = 1000000;
-static uint16_t delay;
 
 
 /****************************************************************
@@ -133,37 +136,97 @@ uint64_t start_polling(int pin){
   gpio_fd_close(gpio_fd);
 }
 
-#define RX_LEN 32
-void transfer_spi(){
-  int fd;
+/*
 
-  fd = open("/dev/spidev0.1", O_RDWR);
-   if (fd < 0) {
-                perror("open");
-         }
+  ____  ____ ___   _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
+ / ___||  _ |_ _| |  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
+ \___ \| |_) | |  | |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
+  ___) |  __/| |  |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
+ |____/|_|  |___| |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ 
+                                                                     
 
-  struct spi_ioc_transfer xfer[2];
+*/
 
-  unsigned char buf[RX_LEN];
+ 
+/* SPI */
+//#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+static const char *device = "/dev/spidev0.0";
+static uint8_t mode = 3;
+static uint8_t bits = 8;
+static uint32_t speed = 1000000;
+static uint16_t delay;
 
-  memset(xfer, 0, sizeof xfer);
-  memset(buf, 0, sizeof buf);
-
-  buf[0] = 0xaa;
-  xfer[0].tx_buf = (unsigned long) buf;
-  xfer[0].len = 1;
-
-  xfer[1].rx_buf = (unsigned long) buf;
-  xfer[1].len = 1;
-
-  ioctl(fd, SPI_IOC_MESSAGE(2),xfer);
-
-  printf("%l\n",xfer[1].rx_buf );
+static void pabort(const char *s)
+{
+  perror(s);
+  abort();
 }
 
-int main(void) {
+void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, uint32_t speed)
+{
+//  printf("### START SPI\n");
+  int ret;
+  int fd = open(device, O_RDWR);
+  if (fd < 0)
+    pabort("can't open device");
 
-    puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
-  transfer_spi();
-    return 0;
+/*if(writeBuffer != NULL){
+  writeBuffer = 0;
+  uint8_t tx[writeCount] = writeBuffer;
+}
+
+if(readBuffer != NULL){
+  readBuffer = 0;
+  uint8_t rx[readCount] = readBuffer;
+}*/
+  /*printf("%s\n", "\nTO SEND:");
+  int i;
+  for (i = 0; i < size; i++)
+  {
+      if (i > 0) printf(":");
+      printf("%02X", writeBuffer[i]);
+  }
+*/
+  //printf("%s\n", "\nTO SEND:");
+ // for (ret = 0; ret < ARRAY_SIZE(writeBuffer); ret++) {
+//    if (!(ret % 6))
+//      puts("");
+  //    printf("%.2X ", writeBuffer[ret]);
+//  }
+
+// ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
+//  if (ret == -1)
+//    pabort("can't set spi mode");
+
+  
+  struct spi_ioc_transfer tr = {
+    .tx_buf = (unsigned long)writeBuffer,
+    .rx_buf = (unsigned long)readBuffer,
+    .len = writeCount,
+    .delay_usecs = delay,
+    .speed_hz = speed,
+    .cs_change = 0,
+    .bits_per_word = 8,
+  };
+
+  ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
+  close(fd);
+/*  printf("\nioctl returned: %i\n", ret);
+  if (ret < 1)
+    printf("%s\n","cna't send spi message");
+
+  printf("%s ", "SPI RETURNS: ");
+  for (i = 0; i < ARRAY_SIZE(readBuffer); i++)
+  {
+      if (i > 0) printf(":");
+      printf("%02X", readBuffer[i]);
+  }
+*/
+//  printf("%i\n", ARRAY_SIZE(readBuffer));
+ // for (ret = 0; ret < ARRAY_SIZE(readBuffer); ret++) {
+//    if (!(ret % 6))
+//    printf("%.2X ", readBuffer[ret]);
+//  }
+
+ // printf("\n### END SPI\n\n\n\n");
 }
