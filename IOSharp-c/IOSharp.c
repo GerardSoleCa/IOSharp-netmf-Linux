@@ -1,3 +1,4 @@
+#include "IOSharp.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -146,15 +147,9 @@ uint64_t start_polling(int pin){
                                                                      
 
 */
-
- 
-/* SPI */
-//#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 static const char *device = "/dev/spidev0.0";
-static uint8_t mode = 3;
-static uint8_t bits = 8;
-static uint32_t speed = 1000000;
-static uint16_t delay;
+
+
 
 static void pabort(const char *s)
 {
@@ -162,71 +157,48 @@ static void pabort(const char *s)
   abort();
 }
 
-void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, uint32_t speed)
+void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi)
 {
-//  printf("### START SPI\n");
+  uint8_t mode;
   int ret;
   int fd = open(device, O_RDWR);
   if (fd < 0)
     pabort("can't open device");
 
-/*if(writeBuffer != NULL){
-  writeBuffer = 0;
-  uint8_t tx[writeCount] = writeBuffer;
-}
+ // printf("PRINTING SPI_CONFIG\n");
+ // printf("Mode %i\n", spi.mode );
+ // printf("Cs_Change %i\n", spi.cs_change );
+ // printf("Speed %u\n", spi.speed);
+ // printf("delay %u\n", spi.delay);
 
-if(readBuffer != NULL){
-  readBuffer = 0;
-  uint8_t rx[readCount] = readBuffer;
-}*/
-  /*printf("%s\n", "\nTO SEND:");
-  int i;
-  for (i = 0; i < size; i++)
-  {
-      if (i > 0) printf(":");
-      printf("%02X", writeBuffer[i]);
-  }
-*/
-  //printf("%s\n", "\nTO SEND:");
- // for (ret = 0; ret < ARRAY_SIZE(writeBuffer); ret++) {
-//    if (!(ret % 6))
-//      puts("");
-  //    printf("%.2X ", writeBuffer[ret]);
-//  }
+  if(spi.mode == 0)
+    mode = SPI_MODE_0;
+  else if(spi.mode == 1)
+    mode = SPI_MODE_1;
+  else if(spi.mode == 2)
+    mode = SPI_MODE_2;
+  else
+    mode = SPI_MODE_3;
 
-// ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
-//  if (ret == -1)
-//    pabort("can't set spi mode");
+  ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
+  if (ret == -1)
+    pabort("can't set spi mode");
+
+  ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
+  if (ret == -1)
+    pabort("can't get spi mode");
 
   
   struct spi_ioc_transfer tr = {
     .tx_buf = (unsigned long)writeBuffer,
     .rx_buf = (unsigned long)readBuffer,
     .len = writeCount,
-    .delay_usecs = delay,
-    .speed_hz = speed,
-    .cs_change = 0,
+    .delay_usecs = spi.delay,
+    .speed_hz = spi.speed,
+    .cs_change = spi.cs_change,
     .bits_per_word = 8,
   };
 
   ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
   close(fd);
-/*  printf("\nioctl returned: %i\n", ret);
-  if (ret < 1)
-    printf("%s\n","cna't send spi message");
-
-  printf("%s ", "SPI RETURNS: ");
-  for (i = 0; i < ARRAY_SIZE(readBuffer); i++)
-  {
-      if (i > 0) printf(":");
-      printf("%02X", readBuffer[i]);
-  }
-*/
-//  printf("%i\n", ARRAY_SIZE(readBuffer));
- // for (ret = 0; ret < ARRAY_SIZE(readBuffer); ret++) {
-//    if (!(ret % 6))
-//    printf("%.2X ", readBuffer[ret]);
-//  }
-
- // printf("\n### END SPI\n\n\n\n");
 }

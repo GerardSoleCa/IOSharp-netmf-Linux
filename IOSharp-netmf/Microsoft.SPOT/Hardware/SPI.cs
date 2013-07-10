@@ -118,8 +118,8 @@ namespace Microsoft.SPOT.Hardware
             //    m_cs = new OutputPort(config.ChipSelect_Port, !config.ChipSelect_ActiveState);
             //}
 
-            //m_config = config;
-            //m_disposed = false;
+            m_config = config;
+            m_disposed = false;
         }
 
         ~SPI()
@@ -170,6 +170,7 @@ namespace Microsoft.SPOT.Hardware
             //        m_disposed = true;
             //    }
             //}
+            Dispose();
         }
 
         public void Dispose()
@@ -257,7 +258,7 @@ namespace Microsoft.SPOT.Hardware
                 throw new ArgumentException();
             }
 
-            InternalWriteRead(writeBuffer, writeOffset, writeCount, readBuffer, readOffset, readCount, startReadOffset, 1000000);
+            InternalWriteRead(writeBuffer, writeOffset, writeCount, readBuffer, readOffset, readCount, startReadOffset, new spi_config(m_config));
         }
 
         public void WriteRead(byte[] writeBuffer, byte[] readBuffer, int startReadOffset)
@@ -277,10 +278,10 @@ namespace Microsoft.SPOT.Hardware
             {
                 readBuffer = new Byte[writeBuffer.Length];
             }
-                     readBufLen = readBuffer.Length;
-       
+            readBufLen = readBuffer.Length;
 
-            InternalWriteRead(writeBuffer, 0, writeBuffer.Length, readBuffer, 0, readBufLen, startReadOffset, 1000000);
+            spi_config spi = new spi_config(m_config);
+            InternalWriteRead(writeBuffer, 0, writeBuffer.Length, readBuffer, 0, readBufLen, startReadOffset, spi);
         }
 
         public void WriteRead(byte[] writeBuffer, byte[] readBuffer)
@@ -330,7 +331,32 @@ namespace Microsoft.SPOT.Hardware
         //extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset);
 
         [DllImport("libIOSharp-c.so", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        static extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset, uint speed);
+        static extern private void InternalWriteRead(byte[] writeBuffer, int writeOffset, int writeCount, byte[] readBuffer, int readOffset, int readCount, int startReadOffset, spi_config spi);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct spi_config
+        {
+            public int mode;
+            public uint speed;
+            public int cs_change;
+            public ushort delay;
+
+            public spi_config(Configuration config)
+            {
+                this.cs_change = (config.ChipSelect_ActiveState) ? 1 : 0;
+                this.delay = (ushort)config.ChipSelect_HoldTime;
+
+                if (config.Clock_Edge && !config.Clock_IdleState)
+                    this.mode = 0;
+                else if (!config.Clock_Edge && !config.Clock_IdleState)
+                    this.mode = 1;
+                else if (config.Clock_Edge && config.Clock_IdleState)
+                    this.mode = 2;
+                else
+                    this.mode = 3;
+                this.speed = config.Clock_RateKHz*1000;
+            }
+        }
     }
 }
 

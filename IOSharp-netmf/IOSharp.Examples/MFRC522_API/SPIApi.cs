@@ -124,10 +124,10 @@ namespace IOSharp.Exmples.MFRC522
             SPI.Configuration xSPIConfig;
 
             xSPIConfig = new SPI.Configuration(Cpu.Pin.GPIO_NONE,    //Chip Select pin
-                                                false,              //Chip Select Active State
+                                                true,              //Chip Select Active State
                                                 50,                  //Chip Select Setup Time
                                                 0,                  //Chip Select Hold Time
-                                                false,              //Clock Idle State
+                                                true,              //Clock Idle State
                                                 true,               //Clock Edge
                                                 1000,               //Clock Rate (kHz)
                                                 SPI.SPI_module.SPI1);//SPI Module
