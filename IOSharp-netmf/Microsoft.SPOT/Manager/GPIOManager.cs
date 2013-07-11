@@ -16,7 +16,8 @@ namespace Microsoft.SPOT.Manager
         INPUT,
         OUTPUT,
         TRISTATE,
-        INTERRUPT
+        INTERRUPT,
+        RESERVED
     };
 
     class GPIOManager
@@ -26,7 +27,7 @@ namespace Microsoft.SPOT.Manager
 
 
         private static Dictionary<Cpu.Pin, PortType> _activePins = new Dictionary<Cpu.Pin, PortType>();
-        private static List<Cpu.Pin> _reservedPins = new List<Cpu.Pin>();
+        //private static List<Cpu.Pin> _reservedPins = new List<Cpu.Pin>();
 
         protected static String GPIO_PATH = "/sys/class/gpio/";
 
@@ -173,9 +174,9 @@ namespace Microsoft.SPOT.Manager
                     interrupt = "falling";
                     break;
                 case Port.InterruptMode.InterruptEdgeLevelLow:
-                    break;
+                    throw new Exception();
                 case Port.InterruptMode.InterruptEdgeLevelHigh:
-                    break;
+                    throw new Exception();
                 case Port.InterruptMode.InterruptEdgeHigh:
                     interrupt = "rising";
                     break;
@@ -184,6 +185,30 @@ namespace Microsoft.SPOT.Manager
                     break;
             }
             File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/edge", interrupt.ToLower());
+        }
+
+        public bool ReservePin(Cpu.Pin pin, bool fReserve)
+        {
+
+            if (_activePins.ContainsKey(pin) && fReserve)
+            {
+                return false;
+            }
+            else if (_activePins.ContainsKey(pin) && !fReserve)
+            {
+                _activePins.Remove(pin);
+                return true;
+            }
+            else if (!_activePins.ContainsKey(pin) && fReserve)
+            {
+                _activePins.Add(pin, PortType.RESERVED);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
         public void Listen_events(Cpu.Pin pin, NativeEventHandler callback)
@@ -198,11 +223,11 @@ namespace Microsoft.SPOT.Manager
         private void Listen(object obj)
         {
             ThreadHelper th = (ThreadHelper)obj;
-             while (true)
+            while (true)
             {
                 callback_p cback = GPIOManager.start_polling((int)th.Pin);
 
-                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time*1000);
+                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time * 1000);
                 th.Callback((uint)cback.pin, (uint)0, dt);
             }
         }
@@ -219,9 +244,9 @@ namespace Microsoft.SPOT.Manager
         [StructLayout(LayoutKind.Sequential)]
         private struct callback_p
         {
-           public int pin;
-           public string state;
-           public long poll_time;
+            public int pin;
+            public string state;
+            public long poll_time;
         }
     }
 }

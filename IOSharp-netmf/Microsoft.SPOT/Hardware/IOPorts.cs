@@ -199,7 +199,9 @@ namespace Microsoft.SPOT.Hardware
 
         public Cpu.Pin Id { get; set; }
 
-        static public bool ReservePin(Cpu.Pin pin, bool fReserve) { return false; }
+        static public bool ReservePin(Cpu.Pin pin, bool fReserve) {
+            return GPIOManager.Instance.ReservePin(pin, fReserve);
+        }
     }
 
     //--//
@@ -260,13 +262,41 @@ namespace Microsoft.SPOT.Hardware
 
     public sealed class TristatePort : OutputPort
     {
+        private bool active = false;
+        private bool firstTimeOutput = false;
         public TristatePort(Cpu.Pin portId, bool initialState, bool glitchFilter, ResistorMode resistor)
             : base(portId, initialState, glitchFilter, resistor)
         {
-            GPIOManager.Instance.SetPortType(portId, PortType.TRISTATE);
+                GPIOManager.Instance.SetPortType(portId, PortType.INPUT);
+                active = false;
+                this.InitialState = initialState;
+                this.firstTimeOutput = true;
         }
 
-        public bool Active { get; set; }
+        public bool Active
+        {
+            get
+            {
+                return active;
+            }
+            set
+            {
+                if (Active)
+                {
+                    GPIOManager.Instance.SetPortType(this.Id, PortType.OUTPUT);
+                    if (firstTimeOutput)
+                    {
+                        this.Write(InitialState);
+                        firstTimeOutput = false;
+                    }
+                }
+                else
+                {
+                    GPIOManager.Instance.SetPortType(this.Id, PortType.INPUT);
+                }
+                this.active = Active;
+            }
+        }
 
         public ResistorMode Resistor { get; set; }
 
