@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>IOSharp.Exmples.SPIExample</StartupObject>
+    <StartupObject>IOSharp.Examples.SimpleNordicWriteAddress</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,8 +46,16 @@
   <ItemGroup>
     <Compile Include="BlinkingLedExample.cs" />
     <Compile Include="ButtonEventExample.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\AddressSlot.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\AddressWidth.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\Bits.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\Commands.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\NRF24L01Plus.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\Registers.cs" />
+    <Compile Include="Gralin.NETMF.Nordic.NRF24L01Plus\Status.cs" />
     <Compile Include="MFRC522_API\SPIApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleNordicWriteAddress.cs" />
     <Compile Include="SPIExample.cs" />
     <Compile Include="UARTExample.cs" />
     <Compile Include="Utils\ExtensionAttribute.cs" />
