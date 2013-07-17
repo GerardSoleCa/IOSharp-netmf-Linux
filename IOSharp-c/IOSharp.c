@@ -1,3 +1,4 @@
+#include "IOSharp.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -5,7 +6,6 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <poll.h>
 
 /* SPI */
@@ -15,6 +15,17 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
+/*
+
+   ____ ____ ___ ___    _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
+  / ___|  _ |_ _/ _ \  |  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
+ | |  _| |_) | | | | | | |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
+ | |_| |  __/| | |_| | |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
+  \____|_|  |___\___/  |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/
+                                                                     
+
+*/
+
  /****************************************************************
  * Constants
  ****************************************************************/
@@ -23,13 +34,6 @@
 #define POLL_TIMEOUT (-1) /* 3 seconds */
 #define MAX_BUF 64
 
-/* SPI */
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
-static const char *device = "/dev/spidev0.1";
-static uint8_t mode = 3;
-static uint8_t bits = 8;
-static uint32_t speed = 1000000;
-static uint16_t delay;
 
 
 /****************************************************************
@@ -133,3 +137,68 @@ uint64_t start_polling(int pin){
   gpio_fd_close(gpio_fd);
 }
 
+/*
+
+  ____  ____ ___   _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
+ / ___||  _ |_ _| |  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
+ \___ \| |_) | |  | |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
+  ___) |  __/| |  |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
+ |____/|_|  |___| |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ 
+                                                                     
+
+*/
+static const char *device = "/dev/spidev0.0";
+
+
+
+static void pabort(const char *s)
+{
+  perror(s);
+  abort();
+}
+
+void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi)
+{
+  uint8_t mode;
+  int ret;
+  int fd = open(device, O_RDWR);
+  if (fd < 0)
+    pabort("can't open device");
+
+ // printf("PRINTING SPI_CONFIG\n");
+ // printf("Mode %i\n", spi.mode );
+ // printf("Cs_Change %i\n", spi.cs_change );
+ // printf("Speed %u\n", spi.speed);
+ // printf("delay %u\n", spi.delay);
+
+  if(spi.mode == 0)
+    mode = SPI_MODE_0;
+  else if(spi.mode == 1)
+    mode = SPI_MODE_1;
+  else if(spi.mode == 2)
+    mode = SPI_MODE_2;
+  else
+    mode = SPI_MODE_3;
+
+  ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
+  if (ret == -1)
+    pabort("can't set spi mode");
+
+  ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
+  if (ret == -1)
+    pabort("can't get spi mode");
+
+  
+  struct spi_ioc_transfer tr = {
+    .tx_buf = (unsigned long)writeBuffer,
+    .rx_buf = (unsigned long)readBuffer,
+    .len = writeCount,
+    .delay_usecs = spi.delay,
+    .speed_hz = spi.speed,
+    .cs_change = spi.cs_change,
+    .bits_per_word = 8,
+  };
+
+  ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
+  close(fd);
+}

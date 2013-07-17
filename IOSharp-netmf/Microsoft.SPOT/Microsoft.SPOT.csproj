@@ -8,8 +8,8 @@
     <ProjectGuid>{261C03F4-AAF9-4651-A473-B66C38F3D548}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.SPORT</RootNamespace>
-    <AssemblyName>Microsoft.SPORT</AssemblyName>
+    <RootNamespace>Microsoft.SPOT</RootNamespace>
+    <AssemblyName>Microsoft.SPOT</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -62,11 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hardware\ButtonEnum.cs" />
+    <Compile Include="Exceptions\HardwareProvidedNotRegistered.cs" />
     <Compile Include="Hardware\Cpu.cs" />
-    <Compile Include="Manager\GPIOManager.cs" />
+    <Compile Include="Hardware\Debug.cs" />
     <Compile Include="Hardware\HardwareProvider.cs" />
+    <Compile Include="Hardware\Ports.cs" />
+    <Compile Include="Manager\GPIOManager.cs" />
     <Compile Include="Hardware\IOPorts.cs" />
+    <Compile Include="Native_UART\SerialPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hardware\SPI.cs" />
   </ItemGroup>
