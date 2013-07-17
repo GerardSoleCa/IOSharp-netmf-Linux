@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using IOSharp.Utils;
 using System.Net;
+using Microsoft.SPOT.Hardware;
+using IOSharp.NETMF.RaspberryPi.Hardware;
 
 namespace IOSharp.Exmples
 {
@@ -15,6 +17,7 @@ namespace IOSharp.Exmples
 
         public static void Main()
         {
+            HardwareProvider.Register(new RaspberryPiHWProvider());
             new SPIExample().Run();
         }
 
