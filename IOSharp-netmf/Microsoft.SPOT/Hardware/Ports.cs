@@ -1,7 +1,6 @@
 ﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+
+//[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.SPOT.Hardware.SerialPort")]
 
 //namespace System.IO.Ports
 //{
@@ -35,7 +34,7 @@
 
 //    public delegate void SerialErrorReceivedEventHandler(object sender, SerialErrorReceivedEventArgs e);
 
-//    public delegate void SerialDataReceivedEventHandler(Object sender, SerialDataReceivedEventArgs e);
+//    //public delegate void SerialDataReceivedEventHandler(Object sender, SerialDataReceivedEventArgs e);
 
 //    //--// Enumerations
 

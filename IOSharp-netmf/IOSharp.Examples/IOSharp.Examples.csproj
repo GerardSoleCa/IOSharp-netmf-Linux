@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>IOSharp.Examples.SimpleNordicWriteAddress</StartupObject>
+    <StartupObject>IOSharp.Exmples.UARTExample</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

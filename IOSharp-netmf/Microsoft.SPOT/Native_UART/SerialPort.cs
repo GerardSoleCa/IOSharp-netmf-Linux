@@ -1,11 +1,8 @@
 ﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+//using System.Collections;
 //using System.Threading;
-//using Microsoft.SPOT.Hardware;
 //using System.Runtime.CompilerServices;
-//using System.IO.Ports;
+//using Microsoft.SPOT.Hardware;
 
 //namespace System.IO.Ports
 //{
