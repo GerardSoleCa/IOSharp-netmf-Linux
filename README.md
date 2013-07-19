@@ -16,7 +16,7 @@ The __IOSharp - MicroFramework for Linux__ is intended to allow applications usi
 
 In addition, this port uses the [GPIO, SPI and I2C from Userspace](http://www.haifux.org/lectures/258/gpio_spi_i2c_userspace.pdf) to be distribution and architecture independent.
 
-This project contains two specific parts that are machine-independent, while the third one it depends on the deployment device.
+This project contains two specific parts that are machine-independent, while the third one depends on the deployment device.
 
 Machine-Independent:
 -	The Port itself.
@@ -35,7 +35,7 @@ To Do
 I'm using a Raspberry Pi to test and deploy MicroFramework programs, so in this repository you will find a HardwareProvider that maps SPI and GPIO ports for the Raspberry Pi (revision 1 and 2).
 
 ## State of the Port ##
-The Master branch will contain the most *stable* version (this doesn't mean that will not contain bugs or all the functions are in its totally implemented), while the other branches will contain the development phase of a specific class.
+The Master branch will contain the most *stable* version (this doesn't mean that will not contain bugs or the functionality is totally implemented), while the other branches will contain the development phase of a specific class.
 In the following table you can see the current state of the port.
 
    Master   	| Development 	| To Do 
