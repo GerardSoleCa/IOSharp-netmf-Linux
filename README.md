@@ -44,4 +44,6 @@ InputPort		|  Serial Port	|   I2C
 OutputPort		|       		|  
 InterruptPort 	|       		| 
 TristatePort	|      			|     
-SPI     		|       		|        
+SPI     		|       		|     
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/e30d5140c6c8e97fc372abbe534873cb "githalytics.com")](http://githalytics.com/GerardSoleCa/IOSharp-netmf-Linux)
