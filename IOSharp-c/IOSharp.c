@@ -91,6 +91,7 @@ uint64_t compute_time(){
 
 
 uint64_t start_polling(int pin){
+  //pin = 4;
   struct pollfd fdset[1];
   int nfds = 1;
   int gpio_fd, timeout, rc;
@@ -99,16 +100,16 @@ uint64_t start_polling(int pin){
   long t;
 
   //int count=0;
-
   gpio_fd = gpio_fd_open(pin);
 
   timeout = POLL_TIMEOUT;
 
   //while (count <2) {
-    memset((void*)fdset, 0, sizeof(fdset));
+    //memset((void*)fdset, 0, sizeof(fdset));
 
     fdset[0].fd = gpio_fd;
     fdset[0].events = POLLPRI;
+    fdset[0].revents = 0;
 
     read(fdset[0].fd,&buf,64);
     rc = poll(fdset, nfds, timeout);      
@@ -132,9 +133,9 @@ uint64_t start_polling(int pin){
     //printf("%i\n", count);
     //count++;
   //}
-    return t;
 
-  gpio_fd_close(gpio_fd);
+    gpio_fd_close(gpio_fd);
+    return t;
 }
 
 /*
@@ -148,6 +149,7 @@ uint64_t start_polling(int pin){
 
 */
 static const char *device = "/dev/spidev0.0";
+static int fd=-1;
 
 
 
@@ -157,19 +159,16 @@ static void pabort(const char *s)
   abort();
 }
 
-void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi)
+void InternalWriteReadByte(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi)
 {
   uint8_t mode;
   int ret;
-  int fd = open(device, O_RDWR);
-  if (fd < 0)
-    pabort("can't open device");
 
- // printf("PRINTING SPI_CONFIG\n");
- // printf("Mode %i\n", spi.mode );
- // printf("Cs_Change %i\n", spi.cs_change );
- // printf("Speed %u\n", spi.speed);
- // printf("delay %u\n", spi.delay);
+  if(fd==-1){
+    fd = open(device, O_RDWR);
+    if (fd < 0)
+      pabort("can't open device");
+  }
 
   if(spi.mode == 0)
     mode = SPI_MODE_0;
@@ -200,5 +199,53 @@ void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCo
   };
 
   ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-  close(fd);
+  //close(fd);
+}
+
+void InternalWriteReadShort(unsigned short writeBuffer[], int writeOffset, int writeCount, unsigned short readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi)
+{
+  uint8_t mode;
+  int ret;
+
+  if(fd==-1){
+    fd = open(device, O_RDWR);
+    if (fd < 0)
+      pabort("can't open device");
+  }
+
+  if(spi.mode == 0)
+    mode = SPI_MODE_0;
+  else if(spi.mode == 1)
+    mode = SPI_MODE_1;
+  else if(spi.mode == 2)
+    mode = SPI_MODE_2;
+  else
+    mode = SPI_MODE_3;
+
+  ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
+  if (ret == -1)
+    pabort("can't set spi mode");
+
+  ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
+  if (ret == -1)
+    pabort("can't get spi mode");
+
+  
+  struct spi_ioc_transfer tr = {
+    .tx_buf = (unsigned long)writeBuffer,
+    .rx_buf = (unsigned long)readBuffer,
+    .len = writeCount,
+    .delay_usecs = spi.delay,
+    .speed_hz = spi.speed,
+    .cs_change = spi.cs_change,
+    .bits_per_word = 16,
+  };
+
+  ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
+  //close(fd);
+}
+
+int is_valid_fd(int fd)
+{
+    return fcntl(fd, F_GETFL) != -1 || errno != EBADF;
 }

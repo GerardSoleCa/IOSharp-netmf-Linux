@@ -47,10 +47,13 @@ namespace Microsoft.SPOT.Manager
 
         public void Export(Cpu.Pin pin)
         {
-            if (!_activePins.ContainsKey(pin))
+            lock (this)
             {
-                File.WriteAllText(GPIO_PATH + "export", ((int)pin).ToString());
-                _activePins.Add(pin, PortType.NONE);
+                if (!_activePins.ContainsKey(pin))
+                {
+                    File.WriteAllText(GPIO_PATH + "export", ((int)pin).ToString());
+                    _activePins.Add(pin, PortType.NONE);
+                }
             }
         }
 
@@ -76,139 +79,166 @@ namespace Microsoft.SPOT.Manager
 
         public void Unexport(Cpu.Pin pin)
         {
-            if (_activePins.ContainsKey(pin))
+            lock (this)
             {
-                File.WriteAllText(GPIO_PATH + "unexport", ((int)pin).ToString());
-                _activePins.Remove(pin);
+                if (_activePins.ContainsKey(pin))
+                {
+                    File.WriteAllText(GPIO_PATH + "unexport", ((int)pin).ToString());
+                    _activePins.Remove(pin);
+                }
             }
         }
 
         public bool Read(Cpu.Pin pin)
         {
-            if (_activePins.ContainsKey(pin))
+            lock (this)
             {
-                //if ((_activePins[pin] == PortType.INPUT) || (_activePins[pin] == PortType.OUTPUT))
-                //{
-                String value = File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value");
-                return value == "1" ? true : false;
-                //}
-                //else if ((_activePins[pin] == PortType.INTERRUPT) || (_activePins[pin] == PortType.TRISTATE))
-                //{
-                //    throw new NotImplementedException();
-                //}
-                //else
-                //{
-                //    throw new Exception();
-                //}
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-
-        public void Write(Cpu.Pin pin, bool state)
-        {
-            if (_activePins.ContainsKey(pin))
-            {
-                if ((_activePins[pin] == PortType.OUTPUT))
+                if (_activePins.ContainsKey(pin))
                 {
-                    int value = state == true ? 1 : 0;
-                    File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", (value).ToString().ToLower());
-                }
-                else if ((_activePins[pin] == PortType.TRISTATE))
-                {
-                    throw new NotImplementedException();
+                    //if ((_activePins[pin] == PortType.INPUT) || (_activePins[pin] == PortType.OUTPUT))
+                    //{
+                    String value = File.ReadAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value");
+                    return value == "1" ? true : false;
+                    //}
+                    //else if ((_activePins[pin] == PortType.INTERRUPT) || (_activePins[pin] == PortType.TRISTATE))
+                    //{
+                    //    throw new NotImplementedException();
+                    //}
+                    //else
+                    //{
+                    //    throw new Exception();
+                    //}
                 }
                 else
                 {
                     throw new Exception();
                 }
             }
-            else { throw new Exception(); }
+        }
+
+        public void Write(Cpu.Pin pin, bool state)
+        {
+            lock (this)
+            {
+                //try
+                //{
+                //Debug.Print("Write " + _activePins.ContainsKey(pin));
+                //Debug.Print("Pin " + _activePins[pin]);
+                if (_activePins.ContainsKey(pin))
+                {
+                    if ((_activePins[pin] == PortType.OUTPUT))
+                    {
+                        int value = state == true ? 1 : 0;
+                        File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/value", (value).ToString().ToLower());
+                    }
+                    else if ((_activePins[pin] == PortType.TRISTATE))
+                    {
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                else { throw new Exception(); }
+                //}
+                //catch (IOException e)
+                //{
+                //    Debug.Print(e.Message);
+                //    Thread.Sleep(10);
+                //    Write(pin, state);
+                //}
+            }
         }
 
         public void SetPortType(Cpu.Pin pin, PortType type)
         {
-            if (_activePins.ContainsKey(pin))
+            lock (this)
             {
-                string direction = "";
-                switch (type)
+                if (_activePins.ContainsKey(pin))
                 {
-                    case PortType.NONE:
-                        _activePins[pin] = PortType.NONE;
-                        throw new NotImplementedException();
-                    case PortType.INPUT:
-                        direction = "in";
-                        _activePins[pin] = PortType.INPUT;
-                        break;
-                    case PortType.OUTPUT:
-                        direction = "out";
-                        _activePins[pin] = PortType.OUTPUT;
-                        break;
-                    case PortType.TRISTATE:
-                        _activePins[pin] = PortType.TRISTATE;
-                        throw new NotImplementedException();
-                    case PortType.INTERRUPT:
-                        direction = "in";
-                        _activePins[pin] = PortType.INTERRUPT;
-                        break;
+                    string direction = "";
+                    switch (type)
+                    {
+                        case PortType.NONE:
+                            _activePins[pin] = PortType.NONE;
+                            throw new NotImplementedException();
+                        case PortType.INPUT:
+                            direction = "in";
+                            _activePins[pin] = PortType.INPUT;
+                            break;
+                        case PortType.OUTPUT:
+                            direction = "out";
+                            _activePins[pin] = PortType.OUTPUT;
+                            break;
+                        case PortType.TRISTATE:
+                            _activePins[pin] = PortType.TRISTATE;
+                            throw new NotImplementedException();
+                        case PortType.INTERRUPT:
+                            direction = "in";
+                            _activePins[pin] = PortType.INTERRUPT;
+                            break;
+                    }
+                    File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower());
                 }
-                File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/direction", direction.ToLower());
-            }
-            else
-            {
-                throw new Exception();
+                else
+                {
+                    throw new Exception();
+                }
             }
         }
 
         public void SetEdge(Cpu.Pin pin, Port.InterruptMode interruptMode)
         {
-            String interrupt = "none";
-            Console.WriteLine(interruptMode);
-            switch (interruptMode)
+            lock (this)
             {
-                case Port.InterruptMode.InterruptNone:
-                    break;
-                case Port.InterruptMode.InterruptEdgeLow:
-                    interrupt = "falling";
-                    break;
-                case Port.InterruptMode.InterruptEdgeLevelLow:
-                    throw new Exception();
-                case Port.InterruptMode.InterruptEdgeLevelHigh:
-                    throw new Exception();
-                case Port.InterruptMode.InterruptEdgeHigh:
-                    interrupt = "rising";
-                    break;
-                case Port.InterruptMode.InterruptEdgeBoth:
-                    interrupt = "both";
-                    break;
+                String interrupt = "none";
+                //Console.WriteLine(interruptMode);
+                switch (interruptMode)
+                {
+                    case Port.InterruptMode.InterruptNone:
+                        break;
+                    case Port.InterruptMode.InterruptEdgeLow:
+                        interrupt = "falling";
+                        break;
+                    case Port.InterruptMode.InterruptEdgeLevelLow:
+                        throw new Exception();
+                    case Port.InterruptMode.InterruptEdgeLevelHigh:
+                        throw new Exception();
+                    case Port.InterruptMode.InterruptEdgeHigh:
+                        interrupt = "rising";
+                        break;
+                    case Port.InterruptMode.InterruptEdgeBoth:
+                        interrupt = "both";
+                        break;
+                }
+                File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/edge", interrupt.ToLower());
             }
-            File.WriteAllText(GPIO_PATH + "gpio" + ((int)pin) + "/edge", interrupt.ToLower());
         }
 
         public bool ReservePin(Cpu.Pin pin, bool fReserve)
         {
-
-            if (_activePins.ContainsKey(pin) && fReserve)
+            lock (this)
             {
-                return false;
+                if (_activePins.ContainsKey(pin) && fReserve)
+                {
+                    return false;
+                }
+                else if (_activePins.ContainsKey(pin) && !fReserve)
+                {
+                    _activePins.Remove(pin);
+                    return true;
+                }
+                else if (!_activePins.ContainsKey(pin) && fReserve)
+                {
+                    _activePins.Add(pin, PortType.RESERVED);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (_activePins.ContainsKey(pin) && !fReserve)
-            {
-                _activePins.Remove(pin);
-                return true;
-            }
-            else if (!_activePins.ContainsKey(pin) && fReserve)
-            {
-                _activePins.Add(pin, PortType.RESERVED);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
         }
 
         public void Listen_events(Cpu.Pin pin, NativeEventHandler callback)
@@ -225,15 +255,14 @@ namespace Microsoft.SPOT.Manager
             ThreadHelper th = (ThreadHelper)obj;
             while (true)
             {
-                callback_p cback = GPIOManager.start_polling((int)th.Pin);
-
-                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time * 1000);
-                th.Callback((uint)cback.pin, (uint)0, dt);
+                //Console.WriteLine("Pin: {0}", (int)th.Pin);
+                int pin = (int)th.Pin;
+                //callback_p cback = GPIOManager.start_polling(pin);
+                ulong cback = GPIOManager.start_polling(pin);
+                //DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(cback.poll_time * 1000);
+                th.Callback(4, (uint)0, DateTime.Now);
             }
         }
-
-        [DllImport("libIOSharp-c.so", CallingConvention = CallingConvention.StdCall)]
-        private static extern callback_p start_polling(int gpio);
 
         private class ThreadHelper
         {
@@ -248,5 +277,8 @@ namespace Microsoft.SPOT.Manager
             public string state;
             public long poll_time;
         }
+
+        [DllImport("libIOSharp-c.so", CallingConvention = CallingConvention.StdCall)]
+        private static extern ulong start_polling(int gpio);
     }
 }

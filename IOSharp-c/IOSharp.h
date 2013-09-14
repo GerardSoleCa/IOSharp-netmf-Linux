@@ -11,5 +11,6 @@ typedef struct spi_config
 } SPI_CONFIG;
 
 uint64_t start_polling(int pin);
-void InternalWriteRead(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi);
+void InternalWriteReadByte(unsigned char writeBuffer[], int writeOffset, int writeCount, unsigned char readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi);
+void InternalWriteReadShort(unsigned short writeBuffer[], int writeOffset, int writeCount, unsigned short readBuffer[], int readOffset, int readCount, int startReadOffset, SPI_CONFIG spi);
 #endif
